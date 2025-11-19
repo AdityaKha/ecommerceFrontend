@@ -1,0 +1,25 @@
+ <section class="add">
+    <h2>Add Product</h2>
+    <mat-card>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <div class="row">
+          <mat-form-field appearance="outline"><mat-label>Name</mat-label><input matInput formControlName="name"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Brand</mat-label><input matInput formControlName="brand"></mat-form-field>
+        </div>
+        <div class="row">
+          <mat-form-field appearance="outline"><mat-label>Category</mat-label><input matInput formControlName="category"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Price</mat-label><input type="number" matInput formControlName="price"></mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full"><mat-label>Description</mat-label><textarea matInput rows="4" formControlName="description"></textarea></mat-form-field>
+        <div class="row">
+          <mat-form-field appearance="outline"><mat-label>Release date</mat-label><input matInput type="datetime-local" formControlName="release_date"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Stock</mat-label><input type="number" matInput formControlName="stock_quantity"></mat-form-field>
+        </div>
+        <mat-checkbox formControlName="product_available">Available</mat-checkbox>
+        <div class="actions">
+          <button mat-raised-button color="primary" type="submit">{{ submitting ? 'Saving...' : 'Save' }}</button>
+          <button mat-button routerLink="/products" type="button">Cancel</button>
+        </div>
+      </form>
+    </mat-card>
+  </section>

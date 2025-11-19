@@ -1,0 +1,25 @@
+<mat-toolbar>
+    <div class="container">
+        <span class="logo" routerLink="/products">ShopSmart</span>
+        <button mat-button (click)="goAdd()"> <mat-icon>add</mat-icon> Add Product</button>
+
+        <mat-form-field appearance="outline" class="category">
+            <mat-select [formControl]="categoryControl" placeholder="Categories">
+                <mat-option [value]="null">All</mat-option>
+                <mat-option *ngFor="let c of categories()" [value]="c">{{c}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="search">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput [formControl]="searchControl" placeholder="Search...">
+        </mat-form-field>
+
+        <button mat-button (click)="clear()">Clear</button>
+
+        <button mat-stroked-button (click)="goCart()">
+            <mat-icon matBadge="{{ cartCount() }}" matBadgeOverlap="false">shopping_cart</mat-icon>
+            Cart
+        </button>
+    </div>
+</mat-toolbar>

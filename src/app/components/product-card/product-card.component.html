@@ -1,0 +1,24 @@
+<mat-card class="card">
+    <mat-card-header>
+        <div mat-card-avatar class="avatar">{{ product.brand[0] }}</div>
+        <mat-card-title>{{ product.name }}</mat-card-title>
+        <mat-card-subtitle>{{ product.brand }} • {{ product.category }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+        <p class="desc">{{ product.description }}</p>
+        <div class="meta">
+            <span class="price">₹ {{ product.price | number:'1.2-2' }}</span>
+            <span class="stock" [class.in]="isAvailable()" [class.out]="!isAvailable()">
+                {{ isAvailable() ? (product.stockQuantity + ' in stock') : 'Out of stock' }}
+            </span>
+        </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+        <button mat-raised-button color="primary" (click)="add()" [disabled]="!isAvailable()">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Add to cart
+        </button>
+    </mat-card-actions>
+</mat-card>

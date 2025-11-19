@@ -1,0 +1,24 @@
+<section>
+    <h2>Your Cart</h2>
+    <div *ngIf="items().length === 0" class="empty"><mat-icon>shopping_cart</mat-icon>
+        <p>Your cart is empty.</p>
+    </div>
+    <mat-card *ngIf="items().length > 0" class="cart">
+        <div *ngFor="let it of items(); let i = index" class="row">
+            <div>
+                <h3>{{it.name}}</h3>
+                <p class="brand">{{it.brand}} • {{it.category}}</p>
+                <p class="price">&#8377; {{it.price | number:'1.2-2'}}</p>
+            </div>
+            <div class="actions">
+                <button mat-icon-button color="warn" (click)="remove(i)"><mat-icon>delete</mat-icon></button>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="summary"><span>Total</span><span class="total">&#8377; {{ total | number:'1.2-2' }}</span></div>
+        <div class="buttons">
+            <button mat-raised-button color="primary">Proceed to Checkout</button>
+            <button mat-button color="warn" (click)="clear()">Clear cart</button>
+        </div>
+    </mat-card>
+</section>
