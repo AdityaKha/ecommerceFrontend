@@ -8,4 +8,7 @@ export interface Product {
   productAvailable: boolean;
   releaseDate: string;
   stockQuantity: number;
+  imageName: string;
+  imageType: string;
+  imageData: File | null;
 }

@@ -72,7 +72,7 @@ export class ProductStoreService {
     this.cartItems.set([]);
   }
 
-  addProduct(payload: Omit<Product, 'id'>) {
+  addProduct(payload: FormData) {
     return this.productService.create(payload);
   }
 }

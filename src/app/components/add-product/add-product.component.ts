@@ -9,7 +9,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ProductStoreService } from '../../services/product-store.service';
-
+import { Product } from '../../models/product.model';
 @Component({
   selector: 'app-add-product',
   standalone: true,
@@ -31,6 +31,9 @@ export class AddProductComponent {
   private store = inject(ProductStoreService);
   private snack = inject(MatSnackBar);
   private router = inject(Router);
+  imagePreview: string | null = null;
+  newProduct!: Product;
+
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -49,21 +52,60 @@ export class AddProductComponent {
       this.form.markAllAsTouched();
       return;
     }
+
     this.submitting = true;
-    const v = this.form.value;
-    const payload = {
-      brand: v.brand,
-      category: v.category,
-      description: v.description,
-      name: v.name,
-      price: Number(v.price),
-      product_available: !!v.product_available,
-      release_date: new Date(v.release_date as string).toISOString(),
-      stock_quantity: Number(v.stock_quantity)
+
+    const product = {
+      // id: '',
+      brand: this.form.value.brand!,
+      category: this.form.value.category!,
+      description: this.form.value.description!,
+      name: this.form.value.name!,
+      price: Number(this.form.value.price),
+      productAvailable: !!this.form.value.product_available,
+      releaseDate: new Date(this.form.value.release_date!).toISOString(),
+      stockQuantity: Number(this.form.value.stock_quantity)
     };
-    // this.store.addProduct(payload).subscribe({
-    //   next: ()=>{ this.submitting=false; this.snack.open('Created','Close',{duration:2000}); this.router.navigate(['/products']); },
-    //   error: ()=>{ this.submitting=false; this.snack.open('Failed','Close',{duration:3000}); }
-    // });
+
+    console.log('Prepared product:', product);
+
+    // Create multipart form data
+    const formData = new FormData();
+    formData.append("product", new Blob([JSON.stringify(product)], {
+      type: "application/json"
+    }));
+    console.log(formData);
+
+    if (this.selectedFile) {
+      formData.append("image", this.selectedFile);
+    }
+
+
+    console.log('Submitting product:', formData);
+
+    this.store.addProduct(formData).subscribe({
+      next: () => {
+        this.submitting = false;
+        this.snack.open('Created', 'Close', { duration: 2000 });
+        this.router.navigate(['/products']);
+      },
+      error: () => {
+        this.submitting = false;
+        this.snack.open('Failed', 'Close', { duration: 3000 });
+      }
+    });
   }
+  selectedFile: File | null = null;
+
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    this.selectedFile = input.files[0];
+
+    const reader = new FileReader();
+    reader.onload = () => this.imagePreview = reader.result as string;
+    reader.readAsDataURL(this.selectedFile);
+  }
+
 }
