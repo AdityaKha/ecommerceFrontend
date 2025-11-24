@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product.model';
 import { MatCardModule } from '@angular/material/card';
@@ -14,7 +14,7 @@ import { ProductStoreService } from '../../services/product-store.service';
   templateUrl: './product-card.component.html',
   styleUrls: ['./product-card.component.sass']
 })
-export class ProductCardComponent {
+export class ProductCardComponent implements OnInit {
   private store = inject(ProductStoreService);
   private router = inject(Router);
 
@@ -41,4 +41,14 @@ export class ProductCardComponent {
     });
   }
 
+
+  constructor(private productStoreService: ProductStoreService) { }
+
+  ngOnInit(): void {
+    if (this.product.imageName) {
+      this.productStoreService.getimage(this.product.id).subscribe(url => {
+        this.product.imageData = url;
+      });
+    }
+  }
 }
