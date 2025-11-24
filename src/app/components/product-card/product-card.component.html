@@ -10,7 +10,7 @@
 
     <mat-card-content>
         <p class="desc">{{ product.description }}
-            {{product.releaseDate}}
+            {{product.releaseDate | date:'mediumDate'}}
         </p>
         <div class="meta">
             <span class="price">₹ {{ product.price | number:'1.2-2' }}</span>
@@ -21,6 +21,12 @@
     </mat-card-content>
 
     <mat-card-actions align="end">
+        <button mat-button color="accent" (click)="navigate()">
+            <mat-icon>edit</mat-icon>
+        </button>
+          <button mat-button color="accent" (click)="delete()">
+            <mat-icon>delete</mat-icon>
+        </button>
         <button mat-raised-button color="primary" (click)="add()" [disabled]="!isAvailable()">
             <mat-icon>add_shopping_cart</mat-icon>
             Add to cart

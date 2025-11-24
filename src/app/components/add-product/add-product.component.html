@@ -1,5 +1,5 @@
 <section class="add">
-  <h2>Add Product {{this.newProduct}}</h2>
+  <h2>Add Product</h2>
   <mat-card>
     <form [formGroup]="form" (ngSubmit)="submit()">
       <div class="row">
@@ -38,7 +38,7 @@
       }
 
       <div class="actions">
-        <button mat-raised-button color="primary" type="submit">{{ submitting ? 'Saving...' : 'Save' }}</button>
+        <button mat-raised-button color="primary" type="submit">{{ isEditMode ? 'Update' : 'Save' }}</button>
         <button mat-button routerLink="/products" type="button">Cancel</button>
       </div>
     </form>

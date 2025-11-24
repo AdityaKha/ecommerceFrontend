@@ -34,6 +34,8 @@ export class AddProductComponent {
   imagePreview: string | null = null;
   newProduct!: Product;
 
+  isEditMode: boolean = false;
+
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -43,9 +45,35 @@ export class AddProductComponent {
     price: [0, [Validators.required, Validators.min(0)]],
     product_available: [true],
     release_date: [new Date().toISOString().slice(0, 16)],
-    stock_quantity: [0, [Validators.required, Validators.min(0)]]
+    stock_quantity: [0, [Validators.required, Validators.min(0)]],
+    image_data: [null],
+    image_name: [''],
+    image_type: ['']
   });
   submitting = false;
+
+  constructor() {
+    const navigation = this.router.currentNavigation();
+    const state = navigation?.extras.state as { product: Product } | undefined;
+
+    if (state?.product) {
+      this.isEditMode = true;
+      this.newProduct = state.product;
+      this.form.patchValue({
+        name: this.newProduct.name,
+        brand: this.newProduct.brand,
+        category: this.newProduct.category,
+        description: this.newProduct.description,
+        price: this.newProduct.price,
+        product_available: this.newProduct.productAvailable,
+        release_date: new Date(this.newProduct.releaseDate).toISOString().slice(0, 16),
+        stock_quantity: this.newProduct.stockQuantity,
+        image_data: null,
+        image_name: this.newProduct.imageName,
+        image_type: this.newProduct.imageType
+      });
+    }
+  }
 
   submit() {
     if (this.form.invalid) {
@@ -56,7 +84,7 @@ export class AddProductComponent {
     this.submitting = true;
 
     const product = {
-      // id: '',
+      id: this.isEditMode ? this.newProduct.id : undefined,
       brand: this.form.value.brand!,
       category: this.form.value.category!,
       description: this.form.value.description!,
@@ -74,14 +102,25 @@ export class AddProductComponent {
     formData.append("product", new Blob([JSON.stringify(product)], {
       type: "application/json"
     }));
-    console.log(formData);
 
     if (this.selectedFile) {
       formData.append("image", this.selectedFile);
     }
 
-
-    console.log('Submitting product:', formData);
+    if (this.isEditMode) {
+      this.store.updateProduct(this.newProduct.id!, formData).subscribe({
+        next: () => {
+          this.submitting = false;
+          this.snack.open('Updated', 'Close', { duration: 2000 });
+          this.router.navigate(['/products']);
+        },
+        error: () => {
+          this.submitting = false;
+          this.snack.open('Failed', 'Close', { duration: 3000 });
+        }
+      });
+      return;
+    }
 
     this.store.addProduct(formData).subscribe({
       next: () => {

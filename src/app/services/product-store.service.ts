@@ -75,4 +75,10 @@ export class ProductStoreService {
   addProduct(payload: FormData) {
     return this.productService.create(payload);
   }
+  updateProduct(id: string, payload: FormData) {
+    return this.productService.update(id, payload);
+  }
+  deleteProduct(id: string) {
+    return this.productService.delete(id);
+  }
 }
