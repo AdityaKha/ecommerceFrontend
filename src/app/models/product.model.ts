@@ -10,5 +10,5 @@ export interface Product {
   stockQuantity: number;
   imageName: string;
   imageType: string;
-  imageData: File | null;
+  imageData: string | null;
 }

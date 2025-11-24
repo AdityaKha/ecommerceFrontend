@@ -50,6 +50,10 @@ export class ProductStoreService {
     });
   }
 
+  getimage(id: string) {
+    return this.productService.getImage(id);
+  }
+
   setSearch(term: string): void {
     this.searchTerm.set(term);
   }
