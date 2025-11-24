@@ -33,4 +33,8 @@ export class ProductService {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.api}/${id}`);
   }
+
+  search(term: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.api}/search`, { params: { name: term } });
+  }
 }

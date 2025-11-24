@@ -16,17 +16,7 @@ export class ProductStoreService {
   );
 
   filteredProducts = computed(() => {
-    const term = this.searchTerm().toLowerCase();
-    const category = this.selectedCategory();
-    return this.products().filter(p => {
-      const matchesCategory = !category || p.category === category;
-      const matchesSearch =
-        !term ||
-        p.name.toLowerCase().includes(term) ||
-        p.brand.toLowerCase().includes(term) ||
-        p.description.toLowerCase().includes(term);
-      return matchesCategory && matchesSearch;
-    });
+    return this.products()
   });
 
   cartCount = computed(() => this.cartItems().length);
@@ -55,6 +45,7 @@ export class ProductStoreService {
   }
 
   setSearch(term: string): void {
+    this.searchProducts(term);
     this.searchTerm.set(term);
   }
 
@@ -72,6 +63,12 @@ export class ProductStoreService {
     this.cartItems.set(items);
   }
 
+  increaseQuantity(i: number): void {
+    const items = [...this.cartItems()];
+    items.push(items[i]);
+    this.cartItems.set(items);
+  }
+
   clearCart(): void {
     this.cartItems.set([]);
   }
@@ -84,5 +81,17 @@ export class ProductStoreService {
   }
   deleteProduct(id: string) {
     return this.productService.delete(id);
+  }
+
+  searchProducts(term: string) {
+    this.productService.search(term).subscribe({
+      next: (list) => {
+        this.products.set(list);
+      },
+      error: (err) => {
+        this.error.set('Search failed');
+        console.error(err);
+      },
+    });
   }
 }

@@ -30,6 +30,14 @@ export class CartComponent {
   remove(i: number) {
     this.store.removeFromCart(i);
   }
+
+  increaseQuantity(i: number) {
+    this.store.increaseQuantity(i);
+  }
+
+  decreaseQuantity(i: number) {
+    this.store.removeFromCart(i);
+  }
   
   clear() {
     this.store.clearCart();
